@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from main import *
+from emojis_ids import emojis_ids
 
 with open("token.txt", "r") as f:
 	TOKEN = (f.read())
@@ -31,18 +32,6 @@ for letter_ in range(8):
 	elif s == "w":
 		s = "b"
 
-"""
-square = "d2"
-piece = (stockfish.get_what_is_on_square(square))
-if piece==None:
-	piecestr = f"e{square_w_or_b[square]}s"
-else:
-	piece = piece.name.split("_")
-	piecestr = piece[0][0] + ("n" if piece[1]=="KNIGHT" else piece[1][0] if piece[1]!="KNIGHT" else "") + square_w_or_b[square]
-
-#print(piecestr.lower())
-"""
-
 Empty_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 def convertFEN(FEN):
@@ -66,21 +55,29 @@ def convertFEN(FEN):
 					else:
 						tmp.append(f'b{x}')
 
+	emojis = []
+
 	for row in range(len(fen_l)):
 		for square in range(len(fen_l[row])):
-			print(f'{chr(ord("h") - (square))}{8-row}-{fen_l[row][square]}')
+			#print(f"{chr(ord("h") - (square))}{8-row}-{fen_l[row][square]}")
+			if (fen_l[row][square])=="e":
+				emojis.append(f"<:{fen_l[row][square]}{square_w_or_b[(chr(ord('a') + (square)))+str(8-row)]}s:{emojis_ids[fen_l[row][square]+square_w_or_b[(chr(ord('a') + (square)))+str(8-row)]+'s']}>")
+			else:
+				emojis.append(f"<:{fen_l[row][square]}{square_w_or_b[(chr(ord('a') + (square)))+str(8-row)]}:{emojis_ids[fen_l[row][square]+square_w_or_b[(chr(ord('a') + (square)))+str(8-row)]]}>")
+		emojis.append(f" {str(8-row)}\n")
 
-	return fen_l
+	for x in range(8):
+		emojis.append(f"  {chr(ord('a') + (x))}  ") 
 
-print(convertFEN(Empty_FEN))
+	return "".join(emojis)
+
+#print(convertFEN(Empty_FEN))
 
 
 @bot.command()
 async def new(ctx):
 	stockfish.set_fen_position(Empty_FEN)
-	embed = discord.Embed(title="Chess Board", description="<:this:470903994118832130>", color=0X3483eb)
+	embed = discord.Embed(title="Chess Board", description=convertFEN(Empty_FEN), color=0X3483eb)
 	await ctx.send(embed=embed)
 
 bot.run(TOKEN)
-
-
