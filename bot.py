@@ -80,4 +80,14 @@ async def new(ctx):
 	embed = discord.Embed(title="Chess Board", description=convertFEN(Empty_FEN), color=0X3483eb)
 	await ctx.send(embed=embed)
 
+@bot.command()
+async def move(ctx, arg):
+	make_move(arg)
+	embed = discord.Embed(title="Chess Board", description=convertFEN(stockfish.get_fen_position()), color=0X3483eb)
+	await ctx.send(embed=embed)
+
+	make_move(get_best_move())
+	embed = discord.Embed(title="Chess Board", description=convertFEN(stockfish.get_fen_position()), color=0X34eb52)
+	await ctx.send(embed=embed)
+
 bot.run(TOKEN)
