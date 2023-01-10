@@ -1,2 +1,4 @@
 virt/
 emojis/
+__pycache__/
+token.txt
