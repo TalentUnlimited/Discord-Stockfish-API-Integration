@@ -2,6 +2,9 @@ from stockfish import Stockfish
 
 stockfish = Stockfish(path="stockfish_15.1_win_x64_avx2/stockfish-windows-2022-x86-64-avx2.exe", depth=18)
 
+def set_position(FEN):
+	stockfish.set_fen_position(FEN)
+
 def make_move(move):
 	moves = [move]
 	stockfish.make_moves_from_current_position(moves)
